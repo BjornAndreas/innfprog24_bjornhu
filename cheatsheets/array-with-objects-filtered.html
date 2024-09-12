@@ -54,9 +54,9 @@
             For hver lecturer, må vi legge til en <li> i <ul id="profiles">
         */
 
-        lecturers.filter(lecturer => lecturer.bithyear >= 1990).map(lecturer => document.getElementById("profiles").innerHTML += `<li>${lecturer.personname})
+        lecturers.filter(lecturer => lecturer.birthyear >= 1990).map(lecturer => document.getElementById("profiles").innerHTML += `<li>${lecturer.personname} 
             <ul>
-                ${lecturer.courses.map(course=> `<li>${course}</li>`).join("")}
+                ${lecturer.courses.map(course => `<li>${course}</li>`).join("")}
             </ul>
         </li>`)
         /*
