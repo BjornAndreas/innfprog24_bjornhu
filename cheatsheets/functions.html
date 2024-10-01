@@ -3,13 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Functions cheat sheet</title>
+    <title>Functions cheat sheet 01.10.2024</title>
 </head>
 <body>
-
+    <p>Bjørn Andreas. E-post: <span id="emailcontainer"></span></p>
 
     <script>
-        
+        //Deklarere en function
+        function myFirstFunction() {
+            console.log("Jeg kjører min første funksjon :)")
+        }
+        //Kjøre funksjonen:
+        myFirstFunction()
+
+        //Deklarere en function med en parameter
+        function printName(name) {
+            console.log("Jeg heter " + name)
+        }
+        printName("Bjørn")
+
+         //Deklarere en function med en parameter som har en standard verdi
+         function printDefaultName(name = "ingenting enda...") {
+            console.log("Jeg heter " + name)
+        }
+        printDefaultName()
+
+        //Lagr rn funksjon med e-post sok link (template)
+        function createEmailLink(email) {
+            if(!email) {
+                return "ikke oppgitt"
+            }
+            return `<a href="mailto:${email}">${email}</a>`
+        }
+        console.log(createEmailLink("bjornhu@hiof.no"))
+        document.getElementById("emailcontainer").innerHTML = createEmailLink("bjornhu@hiof.no")
+
     </script>
 </body>
 </html>
