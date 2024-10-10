@@ -17,7 +17,7 @@
     <header>
         <section id="player">
             <ul>
-                <li><img src="icons/shield.svg"> <span id="playerName">Bjørn</span></li>
+                <li><img src="icons/shield.svg"> <span id="playerName">Marius</span></li>
                 <li><img src="icons/energydrink.svg" title="energy"> <span id="energy">3</span></li>
                 <li><img src="icons/notebook.svg"> <span id="notebookItems">0</span></li>
                 <li><img src="icons/solution.svg"> <span id="points">0</span> poeng</li>
@@ -26,13 +26,13 @@
         </section>
         <img src="icons/c3_logo.svg" alt="Code Concept Collector" />
         <nav>
-            <button onclick = "toggleVisibility()" id="notebookToggler"><img src="icons/notebook.svg" />Åpne kladdeboka <span class="shortcut">n</span></button>
-            <button onclick = "toggleVisibility()"  id="infoToggler">Info / Hvordan spille <span class="shortcut">i</span></button>
+            <button id="notebookToggler"><img src="icons/notebook.svg" />Åpne kladdeboka <span class="shortcut">n</span></button>
+            <button id="infoToggler">Info / Hvordan spille <span class="shortcut">i</span></button>
         </nav>
     </header>
     <main>
         
-        <section id="notebook" class="hidden">
+        <section id="notebook">
             <div id="notebook-page">
                 
                 <h2>Notater</h2>
@@ -77,7 +77,7 @@
         //PREPARE GAME CONFIG AND VARIABLES
         //TODO: config
         const gameConfig = {
-            playerName: "Bjørn",
+            playerName: "Jostein",
             energy: 10,
             points: 4000,
             duration: 30
@@ -115,18 +115,6 @@
         }
 
         updateStaticUI()
-
-        const "notebook" = document.getElementById("notebook")
-
-        function toggleVisibility() {
-            if(status === hidden){
-                div.classList.remove("hidden");
-                
-
-            }
-        }
-
-        
     </script>
 </body>
 </html>

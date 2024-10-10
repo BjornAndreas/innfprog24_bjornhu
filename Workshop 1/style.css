@@ -77,7 +77,6 @@ canvas {
     top: 0;
     left: 0;
     font-family: 'Gaegu', cursive;
-    display: hidden;
 }
 #notebook table {
     width: 90%;
@@ -112,7 +111,6 @@ canvas {
     border-radius: 5px;
     cursor: pointer;
     padding: 5px 5px 5px 10px;
-    
 }
 #notebookToggler img {
     width: 32px;
