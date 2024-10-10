@@ -17,7 +17,7 @@
     <header>
         <section id="player">
             <ul>
-                <li><img src="icons/shield.svg"> <span id="playerName">Marius</span></li>
+                <li><img src="icons/shield.svg"> <span id="playerName">Bjørn</span></li>
                 <li><img src="icons/energydrink.svg" title="energy"> <span id="energy">3</span></li>
                 <li><img src="icons/notebook.svg"> <span id="notebookItems">0</span></li>
                 <li><img src="icons/solution.svg"> <span id="points">0</span> poeng</li>
@@ -77,7 +77,7 @@
         //PREPARE GAME CONFIG AND VARIABLES
         //TODO: config
         const gameConfig = {
-            playerName: "Jostein",
+            playerName: "Bjørn",
             energy: 10,
             points: 4000,
             duration: 30
@@ -115,6 +115,59 @@
         }
 
         updateStaticUI()
+
+        //WS2, Oppg 1:
+        function toggleVisibility(elementid) {
+            console.log(elementid)
+            const elem = document.getElementById(elementid)
+            if(elem.classList.contains("hidden")) {
+                elem.style.display = "block"
+                elem.classList.remove("hidden")
+            } else {
+                elem.style.display = "none"
+                elem.classList.add("hidden")
+            }
+        }
+        //WS2, Oppg 2:
+        document.addEventListener("keydown", function(event) {
+            if(event.key === "n") {
+                toggleVisibility("notebook")
+            }
+            if(event.key === "i") {
+                toggleVisibility("info")
+            }
+        })
+        //WS2, Oppg 3:
+        document.getElementById("notebookToggler").addEventListener("click", function() {
+            toggleVisibility("notebook")
+        })
+        document.getElementById("infoToggler").addEventListener("click", function() {
+            toggleVisibility("info")
+        })
+        //WS2, Oppg 4:
+        function updateSingleStaticUI(elementid, value) {
+            document.getElementById(elementid).innerHTML = value
+        }
+        // eksempel på hvordan vi skriver ut nye verdier updateSingleStaticUI("duration", 31)
+
+
+        //WS2, Oppg 5:
+        function updateConfigValue(configType, value) {
+            configType === "energy" ? gameConfig.energy += value : null 
+            configType === "points" ? gameConfig.points += value : null
+            configType === "duration" ? gameConfig.duration += value : null
+            configType === "variables" ? notebook.variables += value : null
+            configType === "arrays" ? notebook.arrays += value : null
+            configType === "functions" ? notebook.functions += value : null
+            configType === "loops" ? notebook.loops += value : null 
+
+            updateStaticUI()
+        } 
+        updateConfigValue("energy", -3)
+        updateConfigValue("duration", 100)
+        updateConfigValue("loops", 1000)
+
+
     </script>
 </body>
 </html>
