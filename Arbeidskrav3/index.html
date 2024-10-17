@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body{
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            background-color: blue
+        }
+
+    </style>
+</head>
+<body>
+    <div class="kalkulator-container">
+        <h1>Karakterkalkulator</h1>
+        <form id="karakter">
+            <label for="PoengOppgave1">Poeng for oppgave 1:</label>
+            <input type="number" id="PoengOppgave1" name="PoengOppgave1" min="0" max="10" required>
+
+            <label for="PoengOppgave2">Poeng for oppgave 2:</label>
+            <input type="number" id="PoengOppgave2" name="PoengOppgave2" min="0" max="12" required>
+
+            <button type="submit" id="kalkuler-btn" disabled>Beregn karakter</button>
+        </form>
+    </div>
+
+    <div id="resultat" class="resultat"></div>
+
+
+    <script>
+        const grades = [
+        {grade: "F", treshold: 0},
+        {grade: "E", treshold: 25},
+        {grade: "D", treshold: 44},
+        {grade: "C", treshold: 68},
+        {grade: "B", treshold: 88},
+        {grade: "A", treshold: 100}
+        ];
+
+
+
+        const form = document.getElementById("karakter");
+        const PoengOppgave1Input = document.getElementById("PoengOppgave1");
+        const PoengOppgave2Input = document.getElementById("PoengOppgave2");
+        const kalkulerbtn = document.getElementById("kalkuler-btn");
+        const resultatdiv = document.getElementById("resultat");
+
+        function AktiverKnapp() {
+            const PoengOppgave1 = PoengOppgave1Input.value;
+            const PoengOppgave2 = PoengOppgave2Input.value;
+            kalkulerbtn.disabled = !(PoengOppgave1 && PoengOppgave2);
+        }
+
+        PoengOppgave1Input.addEventListener("input", AktiverKnapp);
+        PoengOppgave2Input.addEventListener("input", AktiverKnapp);
+
+        function kalkulerKarakter(PoengOppgave1, PoengOppgave2) {
+            const maxPoengOppgave1 = 10;
+            const maxPoengOppgave2 = 12;
+
+            const KalkulertKarakter = (0.3 * (PoengOppgave1 / maxPoengOppgave1 * 100)) + (0.7 * (PoengOppgave2 / maxPoengOppgave2 * 100));
+
+            let EndeligKarakter = "F";
+            for (let i = grades.length - 1; i >= 0; i--) {
+                if (KalkulertKarakter >= grades[i].treshold) {
+                    EndeligKarakter = grades[i].grade;
+                    break;
+                }
+            }
+            
+            return { KalkulertKarakter: KalkulertKarakter.toFixed(2), EndeligKarakter };
+        }
+
+
+        form.addEventListener("submit", function(event){
+            event.preventDefault(); 
+
+            const PoengOppgave1 = parseFloat(PoengOppgave1Input.value);
+            const PoengOppgave2 = parseFloat(PoengOppgave2Input.value);
+
+            const result = kalkulerKarakter(PoengOppgave1, PoengOppgave2);
+
+            resultatdiv.textContent = `Poeng: ${result.KalkulertKarakter}% - Karakter: ${result.EndeligKarakter}`;
+
+        });
+
+    </script>
+    
+    <!--KILDER:
+    https://www.w3schools.com/jsref/met_element_addeventlistener.asp
+    https://developer.mozilla.org/en-US/docs/Web/API/Element/input_event
+    https://www.w3schools.com/js/js_break.asp
+    https://www.w3schools.com/jsref/jsref_tofixed.asp
+    https://www.w3schools.com/jsref/event_preventdefault.asp
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseFloat
+    https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent
+    CHEATSHEETS FRA UNDERVISNING
+    LITT CHAT GPT FOR OG HJELPE MEG MED LØSNINGER
+
+    
+    -->
+        
+</body>
+</html>
