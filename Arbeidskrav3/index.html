@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Arbeidskrav 3 Karakterkalkulator</title>
     <style>
-        body{
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-            margin: 0;
-            padding: 15px;
-            background-color: blue
-        }
+        body {font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; margin: 0; padding: 15px; display: flex; justify-content: center; align-items: center; flex-direction: column;}  
+        .kalkulator-container {background-color: #92ff83b4; padding: 25px; border-radius: 10px; width: 515px;}
+        h1 {text-align: center;}
+        label{display: block; margin: 10px 0px 5px;}
+        input {width: 100%; padding: 7px; margin-bottom: 10px; border: 1px solid; border-radius: 5px;}
+        button {padding: 10px; color: #fff; background-color: #001affb4; cursor: pointer; border: none; border-radius: 25px; margin-top: 8px; width: 100%;}
+        button:disabled {background-color: #ccc; cursor: not-allowed;}
+        .resultat {margin-top: 10px; text-align: center;}
 
+        
     </style>
 </head>
 <body>
@@ -24,7 +27,7 @@
             <label for="PoengOppgave2">Poeng for oppgave 2:</label>
             <input type="number" id="PoengOppgave2" name="PoengOppgave2" min="0" max="12" required>
 
-            <button type="submit" id="kalkuler-btn" disabled>Beregn karakter</button>
+            <button type="submit" id="kalkuler-btn" disabled>Beregn Karakter</button>
         </form>
     </div>
 
@@ -40,8 +43,6 @@
         {grade: "B", treshold: 88},
         {grade: "A", treshold: 100}
         ];
-
-
 
         const form = document.getElementById("karakter");
         const PoengOppgave1Input = document.getElementById("PoengOppgave1");
@@ -90,7 +91,7 @@
 
     </script>
     
-    <!--KILDER:
+    <!-- KILDER:
     https://www.w3schools.com/jsref/met_element_addeventlistener.asp
     https://developer.mozilla.org/en-US/docs/Web/API/Element/input_event
     https://www.w3schools.com/js/js_break.asp
@@ -98,11 +99,11 @@
     https://www.w3schools.com/jsref/event_preventdefault.asp
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseFloat
     https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent
+    https://www.w3schools.com/cssref/pr_class_cursor.php
+    https://stackoverflow.com/questions/14750078/style-disabled-button-with-css
+    https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
     CHEATSHEETS FRA UNDERVISNING
-    LITT CHAT GPT FOR OG HJELPE MEG MED LØSNINGER
-
-    
-    -->
+    LITT CHAT GPT FOR OG HJELPE MEG MED LØSNINGER/Problemer -->
         
 </body>
 </html>
