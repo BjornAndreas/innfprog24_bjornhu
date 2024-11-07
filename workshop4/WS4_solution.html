@@ -146,6 +146,13 @@
                 elem.classList.add("hidden")
             }
         }
+
+        //WS4, Oppg 1: Konfigurere retningsstatus-variabler:
+        let up = false
+        let down = false
+        let right = false
+        let left = false
+
         //WS2, Oppg 2:
         document.addEventListener("keydown", function(event) {
             if(event.key === "n") {
@@ -154,7 +161,40 @@
             if(event.key === "i") {
                 toggleVisibility("info")
             }
+            //WS4 Oppg 1: Sjekker etter taster for retningsendring:
+            if(event.key === "w" || event.key === "ArrowUp") {
+                up = true
+            }
+            if(event.key === "s" || event.key === "ArrowDown") {
+                down = true
+            }
+            if(event.key === "a" || event.key === "ArrowLeft") {
+                left = true
+            }
+            if(event.key === "d" || event.key === "ArrowRight") {
+                right = true
+            }
         })
+        document.addEventListener("keyup",  function(event) {
+            if(event.key === "w" || event.key === "ArrowUp") {
+                up = false
+            }
+            if(event.key === "s" || event.key === "ArrowDown") {
+                down = false
+            }
+            if(event.key === "a" || event.key === "ArrowLeft") {
+                left = false
+            }
+            if(event.key === "d" || event.key === "ArrowRight") {
+                right = false
+            }
+            //Pausestatus (press P to pause):
+            if(event.key === "p") {
+                gameConfig.gamePaused = !gameConfig.gamePaused
+            }
+        })
+
+
         //WS2, Oppg 3:
         document.getElementById("notebookToggler").addEventListener("click", function() {
             toggleVisibility("notebook")
@@ -197,7 +237,8 @@
         function drawItem(type, x, y) {
             let itemImage = new Image()
             itemImage.src = `icons/${type}.svg`
-            itemImage.onload = () => { ctx.drawImage(itemImage, x, y) }
+            //itemImage.onload = () => { ctx.drawImage(itemImage, x, y) }
+            ctx.drawImage(itemImage, x, y)
             //WS3, Oppg. 5.3: Utskrift av levetid: (IF TYPE = Hvis type IKKE er bug)
             if(type !== "bug") {
             ctx.beginPath()
@@ -214,11 +255,29 @@
         const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
 
         function drawElements() {
+            //Tømmer alt vi tegner (fjern dtx.clearRect og se hva som skjer)
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
             console.log("requestAnimationFrame kjører")
 
-            if(fortranLoaded === true) {
-                ctx.drawImage(fortranImage, fortran.x, fortran.y)
+            //WS4 Oppg 1, beveger Fortran:
+            if(gameConfig.gamePaused === false) {
+                if(up === true) {
+                fortran.y = fortran.y - fortran.speed
+                }
+                if(down === true) {
+                    fortran.y = fortran.y + fortran.speed
+                }
+                if(right === true) {
+                    fortran.x = fortran.x + fortran.speed
+                }
+                if(left === true) {
+                    fortran.x = fortran.x - fortran.speed
+                }
             }
+            if(fortranLoaded === true) {
+                    ctx.drawImage(fortranImage, fortran.x, fortran.y)
+                }
+
 
             //WS3, Oppg 4.2: 
             if(gameConfig.gamePaused === true) {
@@ -236,7 +295,7 @@
 
             //WS3, oppg 5.2 test:
             drawItem("function", 50, 100)
-            drawItem("bug", 400, 500)
+            drawItem("array", 400, 500)
 
             //WS3, Oppg 2: Pausetext
             ctx.beginPath()
