@@ -64,11 +64,6 @@ canvas {
     margin: 1rem auto;
     z-index: 12;
 }
-#drawingarea {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 /* NOTEBOOK */
 #notebook {
