@@ -95,10 +95,10 @@
        
         //TODO: notebook
         const notebook = {
-            variables: 2,
-            loops: 4,
-            functions: 3,
-            arrays: 7
+            variables: 0,
+            loops: 0,
+            functions: 0,
+            arrays: 0
         }
 
         //WS3, Oppg 5.1: Array med spillelementtyper:
@@ -126,34 +126,36 @@
 
         //WS5, oppg 1: Rekursiv funksjon som lager tilfeldige spillelementer
         function createItem() {
-            //console.log("Create item er kjørt")
-
-            //Hvilken elementtype lager vi nå?
-            const elementtype = itemTypes[randomMinMax(0, itemTypes.length - 1)]
-            //console.log(elementtype)
-            //Sette verdier innholdtil elementtype
-            if(elementtype === "bug") {
-                items.push({
-                    type: "bug",
-                    x: randomMinMax(10, canvas.width - 50),
-                    y: canvas.height + 50,
-                    lifetime: 0,
-                    caught: false
-                })
-            } else {
-                items.push({
-                    type: elementtype,
-                    x: randomMinMax(10, canvas.width - 50),
-                    y: randomMinMax(10, canvas.height - 50),
-                    lifetime: randomMinMax(3, 9),
-                    caught: false
-                })
+            if(gameConfig.gamePaused === false) {
+                //console.log("createItem er kjørt")
+                //Hvilken elementtype lager vi nå?
+                const elementtype = itemTypes[randomMinMax(0, itemTypes.length - 1)]
+                //Sette verdier ihht elementtype
+                if(elementtype === "bug") {
+                    items.push({
+                        type: "bug",
+                        x: randomMinMax(10, canvas.width - 50),
+                        y: canvas.height + 50,
+                        lifetime: 0,
+                        caught: false
+                    })
+                } else {
+                    items.push({
+                        type: elementtype,
+                        x: randomMinMax(10, canvas.width - 50),
+                        y: randomMinMax(10, canvas.height - 50),
+                        lifetime: randomMinMax(3, 9),
+                        caught: false
+                    })
+                }
             }
-
             setTimeout(createItem, randomMinMax(600, 4000))
+            
+            console.log(gameConfig.gamePaused)
         }
         createItem()
 
+        
 
         //(BONUS) TODO: function for all prints
         function updateStaticUI() {
@@ -296,7 +298,7 @@
         //WS4, opppg 4
         setInterval(function() {
             //console.log("setInterval kjører")
-            if(gameConfig.gamePaused === false) {
+            if(gameConfig.gamePaused === false && gameConfig.energy > 0) {
                 gameConfig.duration++
                 updateSingleStaticUI("duration", gameConfig.duration)
 
@@ -311,6 +313,14 @@
         const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
 
         function drawElements() {
+            //Har vi liv og får lov til å spille?
+            if(gameConfig.energy <= 0) {
+                ctx.beginPath()
+                ctx.font = "100px Arial"
+                ctx.fillStyle = "red"
+                ctx.fillText("GAME OVER", 50, 300)
+                ctx.closePath()
+            } else {
             ctx.clearRect(0, 0, canvas.width, canvas.height)
             console.log("requestAnimationFrame kjører")
 
@@ -327,6 +337,16 @@
                 }
                 if(left === true) {
                     fortran.x = fortran.x - fortran.speed
+                }
+
+                //WS4, bonusoppgave:
+                if(fortran.x < -10 || fortran.x > canvas.width + 10 || fortran.y < -21 || fortran.y > canvas.height + 21) {
+                    //miste et liv:
+                    gameConfig.energy--
+                    updateSingleStaticUI("energy", gameConfig.energy)
+                    //plassere fortran midt i spillbrettet
+                    fortran.x = canvas.width / 2 - 10
+                    fortran.y = canvas.height / 2 - 21
                 }
             }
             
@@ -360,9 +380,11 @@
                 }
             })*/
             //WS4, oppg 5 med .filter()
-            items.filter((item) => item.lifetime > 0 || item.type === "bug").map((item, index) => {
+            if(gameConfig.gamePaused === false) {
+
+            items.filter((item) => (item.lifetime > 0 && item.caught === false) || item.type === "bug").map((item, index) => {
                 if(item.type === "bug") {
-                    item.y = item.y - 3 
+                    item.y = item.y - 3
 
                     //Hvis bug er mer enn 100 pixler på utsiden av spillbrettet
                     if(item.y < -100) {
@@ -370,22 +392,21 @@
                         items.splice(index, 1)
                     }
                 }
-                //sjekke om fortran kolliderer med elementet ("< = mindre" "> = større")
-                if(fortran.x + 20 > item.x && fortran.x < item.x + 48 && fortran.y + 42 > item.y > item.y && fortran.y < item.y + 48) {
-                    if(item.type === "bug") {
-                        if(item.caught === false) {
-                            items.splice(index, 1)
-                            gameConfig.energy--
-                            updateSingleStaticUI("energy", gameConfig.energy)
-                            item.caught = true 
-                        }
-
+                //sjekke om fortran kolliderer med elementet
+                if(fortran.x + 20 > item.x && fortran.x < item.x + 48 && fortran.y + 42 > item.y && fortran.y < item.y + 48) {
+                    if(item.type === "bug" && item.caught === false) {
+                        item.caught = true
+                        items.splice(index, 1)
+                        gameConfig.energy--
+                        updateSingleStaticUI("energy", gameConfig.energy)
+                        gameConfig.points = gameConfig.points - 10
+                        updateSingleStaticUI("points", gameConfig.points)
                     }
                     if(item.type === "variable" && item.caught === false) {
-                        notebook.variable++
+                        notebook.variables++
                         updateSingleStaticUI("variables", notebook.variables)
                         item.caught = true
-                        gameConfig.points = gameConfig.points +5
+                        gameConfig.points = gameConfig.points + 5
                         updateSingleStaticUI("points", gameConfig.points)
                     }
                     if(item.type === "array" && item.caught === false) {
@@ -397,33 +418,31 @@
                     }
                     if(item.type === "function" && item.caught === false) {
                         notebook.functions++
-                        updateSingleStaticUI("functions", notebook.arrays)
+                        updateSingleStaticUI("functions", notebook.functions)
                         item.caught = true
                         gameConfig.points = gameConfig.points +5
                         updateSingleStaticUI("points", gameConfig.points)
                     }
                     if(item.type === "loop" && item.caught === false) {
                         notebook.loops++
-                        updateSingleStaticUI("loops", notebook.arrays)
+                        updateSingleStaticUI("loops", notebook.loops)
                         item.caught = true
                         gameConfig.points = gameConfig.points +5
                         updateSingleStaticUI("points", gameConfig.points)
                     }
                     if(item.type === "energydrink" && item.caught === false) {
-                        notebook.energy++
-                        updateSingleStaticUI("energy", notebook.arrays)
+                        gameConfig.energy++
+                        updateSingleStaticUI("energy", gameConfig.energy)
                         item.caught = true
-                        gameConfig.points = gameConfig.points +5
+                        gameConfig.points = gameConfig.points + 10
                         updateSingleStaticUI("points", gameConfig.points)
                     }
-                    
-                    
-                } 
+                }
 
                 drawItem(item.type, item.x, item.y, item.lifetime)
             })
-
-            //Tester om arrayen inneholder minst en bug. Hvis IKKE ("!"items.some), oppretter en ny bug:
+            }
+            //Tester om arrayen inneholder minst en bug. Hvis ikke, opprett en ny bug:
             if(!items.some((item) => item.type === "bug")) {
                 items.push({
                     type: "bug",
@@ -442,6 +461,7 @@
             ctx.font = "15px Arial"
             ctx.fillText(gameConfig.gamePausedText, 660, 590)
             ctx.closePath()
+            }
 
             requestAnimationFrame(drawElements)
         }
