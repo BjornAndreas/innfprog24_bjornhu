@@ -119,7 +119,41 @@
             {type: "function", x: 300, y: 400, lifetime: 0, caught: false}
         ]
 
-        
+        //WS5, oppg 1: RandomMinMax
+        function randomMinMax(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min)
+        }
+
+        //WS5, oppg 1: Rekursiv funksjon som lager tilfeldige spillelementer
+        function createItem() {
+            //console.log("Create item er kjørt")
+
+            //Hvilken elementtype lager vi nå?
+            const elementtype = itemTypes[randomMinMax(0, itemTypes.length - 1)]
+            //console.log(elementtype)
+            //Sette verdier innholdtil elementtype
+            if(elementtype === "bug") {
+                items.push({
+                    type: "bug",
+                    x: randomMinMax(10, canvas.width - 50),
+                    y: canvas.height + 50,
+                    lifetime: 0,
+                    caught: false
+                })
+            } else {
+                items.push({
+                    type: elementtype,
+                    x: randomMinMax(10, canvas.width - 50),
+                    y: randomMinMax(10, canvas.height - 50),
+                    lifetime: randomMinMax(3, 9),
+                    caught: false
+                })
+            }
+
+            setTimeout(createItem, randomMinMax(600, 4000))
+        }
+        createItem()
+
 
         //(BONUS) TODO: function for all prints
         function updateStaticUI() {
@@ -261,10 +295,15 @@
 
         //WS4, opppg 4
         setInterval(function() {
-            console.log("setInterval kjører")
+            //console.log("setInterval kjører")
             if(gameConfig.gamePaused === false) {
                 gameConfig.duration++
                 updateSingleStaticUI("duration", gameConfig.duration)
+
+                //WS5, oppg 1: Telle ned levetid:
+                items.map((item) => {
+                    item.lifetime--
+                })
             }
             
         }, 1000)
@@ -322,8 +361,78 @@
             })*/
             //WS4, oppg 5 med .filter()
             items.filter((item) => item.lifetime > 0 || item.type === "bug").map((item, index) => {
-                    drawItem(item.type, item.x, item.y, item.lifetime)
+                if(item.type === "bug") {
+                    item.y = item.y - 3 
+
+                    //Hvis bug er mer enn 100 pixler på utsiden av spillbrettet
+                    if(item.y < -100) {
+                        //..sletter vi dem fra arrayen items
+                        items.splice(index, 1)
+                    }
+                }
+                //sjekke om fortran kolliderer med elementet ("< = mindre" "> = større")
+                if(fortran.x + 20 > item.x && fortran.x < item.x + 48 && fortran.y + 42 > item.y > item.y && fortran.y < item.y + 48) {
+                    if(item.type === "bug") {
+                        if(item.caught === false) {
+                            items.splice(index, 1)
+                            gameConfig.energy--
+                            updateSingleStaticUI("energy", gameConfig.energy)
+                            item.caught = true 
+                        }
+
+                    }
+                    if(item.type === "variable" && item.caught === false) {
+                        notebook.variable++
+                        updateSingleStaticUI("variables", notebook.variables)
+                        item.caught = true
+                        gameConfig.points = gameConfig.points +5
+                        updateSingleStaticUI("points", gameConfig.points)
+                    }
+                    if(item.type === "array" && item.caught === false) {
+                        notebook.arrays++
+                        updateSingleStaticUI("arrays", notebook.arrays)
+                        item.caught = true
+                        gameConfig.points = gameConfig.points +5
+                        updateSingleStaticUI("points", gameConfig.points)
+                    }
+                    if(item.type === "function" && item.caught === false) {
+                        notebook.functions++
+                        updateSingleStaticUI("functions", notebook.arrays)
+                        item.caught = true
+                        gameConfig.points = gameConfig.points +5
+                        updateSingleStaticUI("points", gameConfig.points)
+                    }
+                    if(item.type === "loop" && item.caught === false) {
+                        notebook.loops++
+                        updateSingleStaticUI("loops", notebook.arrays)
+                        item.caught = true
+                        gameConfig.points = gameConfig.points +5
+                        updateSingleStaticUI("points", gameConfig.points)
+                    }
+                    if(item.type === "energydrink" && item.caught === false) {
+                        notebook.energy++
+                        updateSingleStaticUI("energy", notebook.arrays)
+                        item.caught = true
+                        gameConfig.points = gameConfig.points +5
+                        updateSingleStaticUI("points", gameConfig.points)
+                    }
+                    
+                    
+                } 
+
+                drawItem(item.type, item.x, item.y, item.lifetime)
             })
+
+            //Tester om arrayen inneholder minst en bug. Hvis IKKE ("!"items.some), oppretter en ny bug:
+            if(!items.some((item) => item.type === "bug")) {
+                items.push({
+                    type: "bug",
+                    x: randomMinMax(10, canvas.width - 50),
+                    y: canvas.height + 50,
+                    lifetime: 0,
+                    caught: false
+                })
+            }
 
             //WS3, Oppg 2: Pausetext
             ctx.beginPath()
